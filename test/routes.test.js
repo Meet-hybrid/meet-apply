@@ -72,8 +72,9 @@ test('POST /student with invalid data returns 422 and error messages', async () 
   });
   assert.equal(res.status, 422);
   const html = await res.text();
-  assert.ok(html.includes("can't be blank"));
-  assert.ok(html.includes('invalid'));
+  assert.ok(html.includes('error(s) prevented your application'), 'shows the error banner');
+  assert.ok(html.includes('is invalid'), 'shows the email error');
+  assert.ok(html.includes('blank'), 'shows required-field errors');
 });
 
 test('POST /student with valid data redirects to thanks', async () => {
@@ -150,7 +151,10 @@ test('review index lists applications', async () => {
   await login(jar);
   const res = await get(base, jar, '/review/instructor');
   assert.equal(res.status, 200);
-  assert.ok((await res.text()).includes('Sarah Levy'));
+  const html = await res.text();
+  // identity columns render in separate cells
+  assert.ok(html.includes('Sarah'), 'lists Sarah');
+  assert.ok(html.includes('Levy'), 'lists Levy');
 });
 
 test('review edit page shows the scoring form and a CSRF token', async () => {
