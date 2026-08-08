@@ -13,7 +13,6 @@ const session = require('express-session');
 const path = require('node:path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -51,7 +50,14 @@ app.use(require('./routes/apply'));
 
 app.use((req, res) => res.status(404).render('apply/call_bad', { model: req.path }));
 
-app.listen(PORT, () => {
-  console.log(`meet-apply-node running at http://localhost:${PORT}`);
-  console.log(`Admin login: ${process.env.ADMIN_USERNAME || 'admin'} / (see .env)`);
-});
+// Export the app so tests can start it on an ephemeral port.
+// Only listen when run directly: `node server.js` (not when required).
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`meet-apply-node running at http://localhost:${PORT}`);
+    console.log(`Admin login: ${process.env.ADMIN_USERNAME || 'admin'} / (see .env)`);
+  });
+}
+
+module.exports = app;

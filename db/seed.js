@@ -170,11 +170,28 @@ function seedReviews() {
   console.log('Reviews:', review.count());
 }
 
-seedCalls();
-seedStudents();
-seedFellows();
-seedInstructors();
-seedBusinesses();
-seedReviews();
-console.log('Seed complete.');
-process.exit(0);
+function seedAll() {
+  seedCalls();
+  seedStudents();
+  seedFellows();
+  seedInstructors();
+  seedBusinesses();
+  seedReviews();
+  return {
+    calls: Call.all().map((c) => c.id),
+    students: student.count(),
+    fellows: fellow.count(),
+    instructors: instructor.count(),
+    businesses: business.count(),
+    reviews: review.count(),
+  };
+}
+
+// Export for tests; only run the full seed when executed directly.
+module.exports = { seedAll, seedCalls, seedStudents, seedFellows, seedInstructors, seedBusinesses, seedReviews };
+
+if (require.main === module) {
+  seedAll();
+  console.log('Seed complete.');
+  process.exit(0);
+}
