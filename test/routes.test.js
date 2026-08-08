@@ -38,11 +38,11 @@ test.after(() => {
 // Public pages
 // ---------------------------------------------------------------------------
 
-test('GET / lists the four application calls', async () => {
+test('GET / lists the application calls', async () => {
   const res = await get(base, createCookieJar(), '/');
   assert.equal(res.status, 200);
   const html = await res.text();
-  for (const id of ['student', 'fellow', 'instructor', 'business']) {
+  for (const id of ['student', 'fellow', 'instructor', 'business', 'mentor']) {
     assert.ok(html.includes(`/${id}`), `home links to /${id}`);
   }
 });
@@ -61,6 +61,26 @@ test('GET /student renders the application form with sections', async () => {
 test('GET /unknown-model returns 404', async () => {
   const res = await get(base, createCookieJar(), '/unicorn');
   assert.equal(res.status, 404);
+});
+
+test('GET /mentor renders the new application form', async () => {
+  const res = await get(base, createCookieJar(), '/mentor');
+  assert.equal(res.status, 200);
+  const html = await res.text();
+  assert.ok(html.includes('First name'));
+  assert.ok(html.includes('why_mentor'));
+  assert.ok(html.includes('Availability'));
+});
+
+test('POST /mentor saves a valid application', async () => {
+  const jar = createCookieJar();
+  const res = await postForm(base, jar, '/mentor', {
+    first_name: 'Mentor', last_name: 'One',
+    email: 'mentor.one@example.com', years_experience: '10',
+    why_mentor: 'Happy to help.', availability: 'Full summer',
+  });
+  assert.equal(res.status, 302);
+  assert.match(res.headers.get('location'), /\/mentor\/thanks/);
 });
 
 test('POST /student with invalid data returns 422 and error messages', async () => {

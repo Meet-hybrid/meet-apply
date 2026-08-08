@@ -21,6 +21,7 @@ const student = require('../models/student');
 const fellow = require('../models/fellow');
 const instructor = require('../models/instructor');
 const business = require('../models/business');
+const mentor = require('../models/mentor');
 const review = require('../models/instructor_review');
 const Call = require('../models/call');
 
@@ -149,6 +150,30 @@ test('business: requires core fields', () => {
   assert.ok(errors.major);
   assert.ok(errors.graduation_year);
   assert.ok(errors.why_meet);
+});
+
+test('mentor: requires core fields, email, and availability option', () => {
+  const errors = mentor.validate({});
+  assert.ok(errors.first_name);
+  assert.ok(errors.last_name);
+  assert.ok(errors.email);
+  assert.ok(errors.why_mentor);
+
+  const base = { first_name: 'R', last_name: 'K', email: 'r@k.com', why_mentor: 'w' };
+  assert.ok(mentor.validate({ ...base, email: 'bad' }).email, 'bad email rejected');
+  assert.ok(
+    mentor.validate({ ...base, availability: 'Whenever' }).availability,
+    'unknown availability option rejected'
+  );
+  assert.equal(
+    mentor.validate({ ...base, availability: '3-5 hours/week' }).availability,
+    undefined
+  );
+});
+
+test('mentor: years_experience coerces to an integer', () => {
+  const coerced = mentor.coerce({ years_experience: '7' });
+  assert.equal(coerced.years_experience, 7);
 });
 
 // ---------------------------------------------------------------------------
