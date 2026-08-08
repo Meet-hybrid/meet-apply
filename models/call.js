@@ -10,9 +10,10 @@ const student = require('./student');
 const fellow = require('./fellow');
 const instructor = require('./instructor');
 const business = require('./business');
+const mentor = require('./mentor');
 const instructorReview = require('./instructor_review');
 
-const APPLICATION_MODELS = { student, fellow, instructor, business };
+const APPLICATION_MODELS = { student, fellow, instructor, business, mentor };
 
 class Call extends BaseModel {
   constructor() {

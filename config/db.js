@@ -98,6 +98,21 @@ db.exec(`
     created_at         TEXT
   );
 
+  CREATE TABLE IF NOT EXISTS mentors (
+    id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name            TEXT NOT NULL,
+    last_name             TEXT NOT NULL,
+    email                 TEXT NOT NULL,
+    current_role          TEXT,
+    organization          TEXT,
+    years_experience      INTEGER,
+    expertise_areas       TEXT,
+    why_mentor            TEXT,
+    availability          TEXT,
+    linkedin              TEXT,
+    created_at            TEXT
+  );
+
   CREATE TABLE IF NOT EXISTS instructor_reviews (
     id                INTEGER PRIMARY KEY AUTOINCREMENT,
     app_reviewer_id   TEXT NOT NULL,
