@@ -64,6 +64,7 @@ npm start                   # → http://localhost:3000
 | Original (Rails 3 / `meet/apply`) | This rebuild |
 |---|---|
 | `app/models/student.rb`, `fellow.rb`, `instructor.rb`, `business.rb` | `models/student.js`, `fellow.js`, `instructor.js`, `business.js` |
+| `models/mentor.js` (new type, learning example) | *(no original — added to show how to extend)* |
 | `app/models/call.rb` — a "call for applications" | `models/call.js` |
 | `app/models/review.rb` + `instructor_review.rb` | `models/instructor_review.js` (review scoring/summaries) |
 | `app/controllers/apply_controller.rb` (`new`, `create`) | `routes/apply.js` (`GET /:model`, `POST /:model`) |
