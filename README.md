@@ -16,11 +16,12 @@ it actually runs on a modern machine, is easy to read, and easy to modify.
 | GitHub repo (public) | ✅ live — `https://github.com/Meet-hybrid/meet-apply` |
 | Project scaffold (`package.json`, `.env`, `.gitignore`) | ✅ done |
 | SQLite schema (`config/db.js`, mirrors original `schema.rb`) | ✅ done |
-| Models (Student, Fellow, Instructor, Business, Call, InstructorReview) | ⬜ in progress |
-| Routes (apply, calls, review, export, visualize, auth) | ⬜ not started |
-| Views (EJS: form, thanks, review, export, visualize) | ⬜ not started |
-| Seed script + sample data | ⬜ not started |
-| Install & run verification | ⬜ not started |
+| Models (Student, Fellow, Instructor, Business, Mentor, Call, InstructorReview) | ✅ done |
+| Routes (apply, calls, review, export, visualize, auth) | ✅ done |
+| Views (EJS: form, thanks, review, export, visualize) | ✅ done |
+| Seed script + sample data (5 calls incl. mentor) | ✅ done |
+| Install & run verification | ✅ done |
+| Automated tests (`npm test`, 37 passing) | ✅ done |
 
 **If you're continuing work**: finish the models first (see [Roadmap](#-roadmap)), then routes,
 then views, then run `npm install && npm run seed && npm start`.
@@ -106,9 +107,19 @@ All the interesting logic is small and deliberately plain. Start here:
    Add the column to `config/db.js` (the schema) if it's new, then `npm run reset`.
    The form, review screen, and CSV export pick it up automatically.
 
-2. **Add a new application type** — create `models/xyz.js` (mirror `models/fellow.js`),
-   add an `xyz` table to `config/db.js`, register the route model in `routes/apply.js`,
-   and seed a `Call` with id `xyz` in `db/seed.js`. That's it.
+2. **Add a new application type** — 4 steps, all data-driven (the `mentor` type is a
+   complete worked example):
+   a. `config/db.js` → add an `CREATE TABLE IF NOT EXISTS` block for the new table.
+   b. `models/xyz.js` → create a model file (mirror `models/mentor.js` or `models/fellow.js`):
+      column metadata `{ name, type, label, ... }` with validation flags.
+   c. `models/call.js` → add `const xyz = require('./xyz')` and put `xyz` in
+      `APPLICATION_MODELS`.
+   d. `db/seed.js` → add a `['xyz', open, reviewable, title, description, deadline,
+      identity_columns]` row to `seedCalls()` (+ optional sample data in a `seedXyz()`).
+
+   That's it — the generic `/:model` routes, form rendering, review view, CSV export,
+   and visualizations all pick the new type up automatically. Restart, `npm run seed`,
+   done. See commit history for the exact `mentor` changes.
 
 3. **Change a validation** — the `required`, `options`, `length`, `unique`, `email`,
    `accept`, `suggest` flags on a column map 1:1 to the original Rails validators.
