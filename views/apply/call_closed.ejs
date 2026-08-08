@@ -1,0 +1,9 @@
+<%- include('../partials/head') %>
+<% pageTitle = call.title + ' — closed'; %>
+<h1><%= call.title %></h1>
+<p><%= call.id %> applications are not open right now.</p>
+<p><%- call.description %></p>
+<p>If you have any questions, please email
+  <a href="mailto:info@meet.mit.edu">info@meet.mit.edu</a>.</p>
+<p><a href="/" class="btn btn-ghost">Back to applications</a></p>
+<%- include('../partials/foot') %>

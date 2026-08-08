@@ -1,0 +1,35 @@
+<%- include('../partials/head') %>
+<% pageTitle = 'Review ' + call.title; %>
+<h1>Review — <%= call.title %></h1>
+<% if (call.reviewable) { %><p class="muted">Reviews are open — order is shuffled per reviewer.</p><% } %>
+<table class="data-table">
+  <thead>
+    <tr>
+      <% call.identityColumnsA().forEach(function (c) { %>
+        <th><%= appClass.labelOf(appClass.columns.find(x => x.name === c) || {}) %></th>
+      <% }) %>
+      <th>Submitted</th>
+      <th>My review</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% apps.forEach(function (app) { %>
+      <tr>
+        <% call.identityColumnsA().forEach(function (c) { %>
+          <td><%= app[c] %></td>
+        <% }) %>
+        <td><%= (app.created_at || '').slice(0, 10) %></td>
+        <td>
+          <% const mine = reviewsByApp && reviewsByApp[app.id]; %>
+          <% if (mine && mine.length > 0) { %><span class="badge badge-open">reviewed</span><% } %>
+        </td>
+        <td><a class="btn btn-ghost btn-sm" href="/review/<%= call.id %>/<%= app.id %>">Open</a></td>
+      </tr>
+    <% }) %>
+    <% if (apps.length === 0) { %>
+      <tr><td colspan="5" class="muted">No applications yet.</td></tr>
+    <% } %>
+  </tbody>
+</table>
+<%- include('../partials/foot') %>

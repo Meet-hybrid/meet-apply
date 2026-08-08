@@ -1,0 +1,6 @@
+<%- include('../partials/head') %>
+<% pageTitle = 'Reviews closed'; %>
+<h1>Reviews are closed</h1>
+<p>Reviews for <strong><%= call.title %></strong> are not open right now.</p>
+<p><a href="/review/<%= call.id %>" class="btn btn-ghost">Back to list</a></p>
+<%- include('../partials/foot') %>

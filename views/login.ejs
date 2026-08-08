@@ -1,0 +1,19 @@
+<%- include('partials/head') %>
+<% pageTitle = 'Staff login'; %>
+<div class="auth-box">
+  <h1>Staff login</h1>
+  <p class="lead">Sign in to manage calls, review applications, and export data.</p>
+  <% if (error) { %><p class="error-banner"><%= error %></p><% } %>
+  <form method="post" action="/login" class="form-stack">
+    <input type="hidden" name="next" value="<%= next %>" />
+    <label>Username
+      <input type="text" name="username" autocomplete="username" required autofocus />
+    </label>
+    <label>Password
+      <input type="password" name="password" autocomplete="current-password" required />
+    </label>
+    <button type="submit" class="btn btn-primary">Sign in</button>
+  </form>
+  <p class="muted">Credentials come from <code>.env</code> (ADMIN_USERNAME / ADMIN_PASSWORD).</p>
+</div>
+<%- include('partials/foot') %>

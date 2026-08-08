@@ -1,0 +1,7 @@
+<%- include('../partials/head') %>
+<% pageTitle = 'No data'; %>
+<h1>No review data</h1>
+<p><strong><%= call.title %></strong> has no reviews to visualize yet.
+  <% if (!call.reviewable) { %>Open it for review in <a href="/calls/<%= call.id %>/edit">Calls</a>.<% } %></p>
+<p><a href="/calls" class="btn btn-ghost">Back to calls</a></p>
+<%- include('../partials/foot') %>

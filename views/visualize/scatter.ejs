@@ -1,0 +1,37 @@
+<%- include('../partials/head') %>
+<% pageTitle = 'Scatter — ' + call.title; %>
+<h1>Scatter — <%= call.title %></h1>
+<%
+  const cols = numericCols.filter(c => c.type === 'integer');
+  const x = cols[0], y = cols[1] || cols[0];
+  const pts = summaries
+    .filter(s => s.summary)
+    .map(s => ({ id: s.app.id, label: call.identify(s.app), x: s.summary[x.name], y: s.summary[y.name] }));
+  const pad = 40, W = 700, H = 480;
+  const xMax = Math.max(7, ...pts.map(p => p.x || 0));
+  const yMax = Math.max(7, ...pts.map(p => p.y || 0));
+  const sx = v => pad + (v / xMax) * (W - 2 * pad);
+  const sy = v => H - pad - (v / yMax) * (H - 2 * pad);
+%>
+<div class="chart-card">
+  <svg viewBox="0 0 <%= W %> <%= H %>" class="chart" role="img" aria-label="Scatterplot of review scores">
+    <g class="axes">
+      <line x1="<%= pad %>" y1="<%= H - pad %>" x2="<%= W - pad %>" y2="<%= H - pad %>" />
+      <line x1="<%= pad %>" y1="<%= pad %>" x2="<%= pad %>" y2="<%= H - pad %>" />
+      <text x="<%= W / 2 %>" y="<%= H - 8 %>" text-anchor="middle" class="axis-label"><%= reviewClass.labelOf(x) %></text>
+      <text x="18" y="<%= H / 2 %>" transform="rotate(-90 18 <%= H / 2 %>)" text-anchor="middle" class="axis-label"><%= reviewClass.labelOf(y) %></text>
+    </g>
+    <% [1,2,3,4,5,6,7].forEach(function (g) { if (g <= xMax) { %>
+      <line x1="<%= sx(g) %>" y1="<%= H - pad %>" x2="<%= sx(g) %>" y2="<%= H - pad + 5 %>" class="tick" />
+      <text x="<%= sx(g) %>" y="<%= H - pad + 20 %>" text-anchor="middle" class="tick-label"><%= g %></text>
+    <% }}) %>
+    <% pts.forEach(function (p) { %>
+      <g class="dot-group">
+        <circle cx="<%= sx(p.x) %>" cy="<%= sy(p.y) %>" r="7" class="dot" />
+        <title><%= p.label %> — <%= reviewClass.labelOf(x) %> <%= p.x %>, <%= reviewClass.labelOf(y) %> <%= p.y %></title>
+      </g>
+    <% }) %>
+  </svg>
+</div>
+<p class="muted"><a href="/visualize/<%= call.id %>/table">table</a> · <a href="/visualize/<%= call.id %>/splom">matrix</a> · <a href="/review/<%= call.id %>">reviews</a></p>
+<%- include('../partials/foot') %>

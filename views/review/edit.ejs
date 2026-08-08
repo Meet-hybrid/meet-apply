@@ -1,0 +1,59 @@
+<%- include('../partials/head') %>
+<% pageTitle = 'Review application'; %>
+<h1>Review — <%= call.identify(app) %></h1>
+
+<div class="review-app">
+  <table class="data-table">
+    <% appClass.formColumns().forEach(function (c) { %>
+      <tr>
+        <th><%= appClass.labelOf(c) %></th>
+        <td>
+          <% const v = app[c.name]; %>
+          <% if (c.type === 'boolean') { %>
+            <%= v ? 'yes' : 'no' %>
+          <% } else if (c.type === 'paperclip') { %>
+            <% if (v) { %><a href="/review/<%= call.id %>/<%= app.id %>/download/<%= c.name.replace('_file_name','') %>">download</a><% } %>
+          <% } else { %>
+            <%- String(v ?? '') %>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+</div>
+
+<% if (Object.keys(errors).length > 0) { %>
+  <div class="error-banner"><ul><% Object.values(errors).forEach(m => { %><li><%= m %></li><% }) %></ul></div>
+<% } %>
+
+<form method="post" action="/review/<%= call.id %>/<%= app.id %>" class="review-form">
+  <table class="data-table">
+    <% reviewClass.formColumns().forEach(function (c) { %>
+      <tr>
+        <th><%= reviewClass.labelOf(c) %></th>
+        <td>
+          <% if (c.type === 'boolean') { %>
+            <input type="checkbox" name="<%= c.name %>" value="1" <%= review[c.name] ? 'checked' : '' %> />
+          <% } else if (c.type === 'text') { %>
+            <textarea name="<%= c.name %>" rows="4" cols="40"><%= review[c.name] || '' %></textarea>
+          <% } else if (c.options) { %>
+            <div class="scale-row">
+              <% c.options.forEach(function (opt) { %>
+                <label class="scale-opt">
+                  <input type="radio" name="<%= c.name %>" value="<%= opt %>"
+                    <%= String(review[c.name]) === String(opt) ? 'checked' : '' %> />
+                  <span><%= opt %></span>
+                </label>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <input type="text" name="<%= c.name %>" value="<%= review[c.name] ?? '' %>" />
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+  <button type="submit" class="btn btn-primary">Save review</button>
+  <a href="/review/<%= call.id %>" class="btn btn-ghost">Back to list</a>
+</form>
+<%- include('../partials/foot') %>

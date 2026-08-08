@@ -43,12 +43,17 @@ class BaseModel {
 
   // ---- SQLite helpers -------------------------------------------------------
 
+  /** Quote an identifier for safe use in generated SQL (handles reserved words). */
+  q(ident) {
+    return `"${String(ident).replace(/"/g, '""')}"`;
+  }
+
   list(orderBy = 'id') {
-    return db.prepare(`SELECT * FROM ${this.table} ORDER BY ${orderBy}`).all();
+    return db.prepare(`SELECT * FROM ${this.table} ORDER BY ${this.q(orderBy)}`).all();
   }
 
   find(id) {
-    return db.prepare(`SELECT * FROM ${this.table} WHERE id = ?`).get(id);
+    return db.prepare(`SELECT * FROM ${this.table} WHERE ${this.q('id')} = ?`).get(id);
   }
 
   count() {
@@ -86,10 +91,11 @@ class BaseModel {
 
   create(data) {
     const cols = Object.keys(data);
+    const quoted = cols.map((c) => this.q(c));
     const placeholders = cols.map(() => '?').join(', ');
     const values = cols.map((c) => (data[c] === undefined ? null : data[c]));
     const info = db
-      .prepare(`INSERT INTO ${this.table} (${cols.join(', ')}) VALUES (${placeholders})`)
+      .prepare(`INSERT INTO ${this.table} (${quoted.join(', ')}) VALUES (${placeholders})`)
       .run(...values);
     return { id: Number(info.lastInsertRowid) };
   }
@@ -97,13 +103,13 @@ class BaseModel {
   update(id, data) {
     const cols = Object.keys(data);
     if (cols.length === 0) return;
-    const sets = cols.map((c) => `${c} = ?`).join(', ');
+    const sets = cols.map((c) => `${this.q(c)} = ?`).join(', ');
     const values = cols.map((c) => (data[c] === undefined ? null : data[c]));
-    db.prepare(`UPDATE ${this.table} SET ${sets} WHERE id = ?`).run(...values, id);
+    db.prepare(`UPDATE ${this.table} SET ${sets} WHERE ${this.q('id')} = ?`).run(...values, id);
   }
 
   destroy(id) {
-    db.prepare(`DELETE FROM ${this.table} WHERE id = ?`).run(id);
+    db.prepare(`DELETE FROM ${this.table} WHERE ${this.q('id')} = ?`).run(id);
   }
 
   /** All rows' values for the given column names (used by export/visualize). */
@@ -111,7 +117,7 @@ class BaseModel {
     if (ids.length === 0) return [];
     const marks = ids.map(() => '?').join(', ');
     return db
-      .prepare(`SELECT id, ${column} AS value FROM ${this.table} WHERE id IN (${marks})`)
+      .prepare(`SELECT ${this.q('id')}, ${this.q(column)} AS value FROM ${this.table} WHERE ${this.q('id')} IN (${marks})`)
       .all(...ids);
   }
 
@@ -173,7 +179,7 @@ class BaseModel {
       // uniqueness
       if (c.unique && val !== '' && val != null) {
         const row = db
-          .prepare(`SELECT id FROM ${this.table} WHERE ${c.name} = ?`)
+          .prepare(`SELECT ${this.q('id')} FROM ${this.table} WHERE ${this.q(c.name)} = ?`)
           .get(val);
         if (row && (!data.id || Number(row.id) !== Number(data.id))) {
           errors[c.name] = `${label} has already been taken`;

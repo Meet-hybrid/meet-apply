@@ -1,0 +1,36 @@
+<%- include('../partials/head') %>
+<% pageTitle = 'Calls'; %>
+<h1>Calls for applications</h1>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Status</th>
+      <th>Reviewable</th>
+      <th>Deadline</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% calls.forEach(function (call) { %>
+      <tr>
+        <td><code><%= call.id %></code></td>
+        <td><%= call.title %></td>
+        <td>
+          <span class="badge <%= call.open ? 'badge-open' : 'badge-closed' %>">
+            <%= call.open ? 'Open' : 'Closed' %>
+          </span>
+        </td>
+        <td><%= call.reviewable ? 'Yes' : 'No' %></td>
+        <td><%= call.deadline || '—' %></td>
+        <td>
+          <a class="btn btn-ghost btn-sm" href="/calls/<%= call.id %>/edit">Edit</a>
+          <a class="btn btn-ghost btn-sm" href="/review/<%= call.id %>">Review</a>
+          <a class="btn btn-ghost btn-sm" href="/export/<%= call.id %>">Export CSV</a>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<%- include('../partials/foot') %>

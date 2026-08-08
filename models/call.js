@@ -32,7 +32,9 @@ class Call extends BaseModel {
   }
 
   static find(id) {
-    return db.prepare('SELECT * FROM calls WHERE id = ?').get(id) || null;
+    const row = db.prepare('SELECT * FROM calls WHERE id = ?').get(id);
+    // return a real Call instance so appClass()/reviewClass() etc. exist
+    return row ? Object.assign(new Call(), row) : null;
   }
 
   static create(data) {

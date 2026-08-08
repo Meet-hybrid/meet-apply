@@ -1,0 +1,27 @@
+<%- include('../partials/head') %>
+<% pageTitle = 'Visualize — ' + call.title; %>
+<h1>Review summary — <%= call.title %></h1>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Applicant</th>
+      <% numericCols.forEach(function (c) { %>
+        <th><%= reviewClass.labelOf(c) %></th>
+      <% }) %>
+    </tr>
+  </thead>
+  <tbody>
+    <% summaries.forEach(function (s) { %>
+      <tr>
+        <td><a href="/review/<%= call.id %>/<%= s.app.id %>"><%= call.identify(s.app) %></a></td>
+        <% numericCols.forEach(function (c) { %>
+          <td>
+            <% if (!s.summary) { %>—<% } else if (c.type === 'integer') { %><%= Math.round(s.summary[c.name] * 10) / 10 %><% } else if (c.type === 'boolean') { %><%= Math.round(s.summary[c.name] * 100) %>%<% } %>
+          </td>
+        <% }) %>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<p class="muted"><a href="/visualize/<%= call.id %>/scatter">scatter</a> · <a href="/visualize/<%= call.id %>/splom">matrix</a> · <a href="/review/<%= call.id %>">reviews</a></p>
+<%- include('../partials/foot') %>

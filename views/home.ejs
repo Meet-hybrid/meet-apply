@@ -1,0 +1,29 @@
+<%- include('partials/head') %>
+<% pageTitle = 'Apply to MEET'; %>
+<h1>Apply to MEET</h1>
+<p class="lead">
+  MEET (Middle East Education through Technology) empowers Israeli and Palestinian
+  youth through technology and leadership. Choose the application that fits you.
+</p>
+
+<div class="call-grid">
+  <% calls.forEach(function (call) { %>
+    <a class="call-card <%= call.open ? '' : 'closed' %>" href="/<%= call.id %>">
+      <div class="call-card-head">
+        <h2><%= call.title %></h2>
+        <span class="badge <%= call.open ? 'badge-open' : 'badge-closed' %>">
+          <%= call.open ? 'Open' : 'Closed' %>
+        </span>
+      </div>
+      <% if (call.deadline) { %>
+        <p class="deadline">Deadline: midnight on <%= call.deadline %></p>
+      <% } %>
+      <p class="desc"><%= call.description %></p>
+    </a>
+  <% }) %>
+</div>
+
+<% if (typeof currentUser !== 'undefined' && currentUser) { %>
+  <p class="admin-hint">You're logged in — <a href="/calls">manage calls</a>.</p>
+<% } %>
+<%- include('partials/foot') %>

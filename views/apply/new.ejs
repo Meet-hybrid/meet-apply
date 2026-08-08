@@ -1,0 +1,96 @@
+<%- include('../partials/head') %>
+<% pageTitle = call.title; %>
+
+<h1 id="apply-form-header"><%= call.title %></h1>
+<% if (call.deadline) { %>
+  <p id="apply-form-deadline" class="deadline">DEADLINE midnight on <%= call.deadline %></p>
+<% } %>
+<p id="apply-form-description"><%- call.description %></p>
+
+<% if (late && currentUser) { %>
+  <p id="apply-form-notice" class="late-notice">User <%= currentUser %> adding late application</p>
+<% } %>
+
+<% if (Object.keys(errors).length > 0) { %>
+  <div id="apply-form-errors" class="error-banner">
+    <p><%= Object.keys(errors).length %> error(s) prevented your application from being received:</p>
+    <ul>
+      <% Object.values(errors).forEach(function (msg) { %><li><%= msg %></li><% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<form method="post" action="/<%= call.id %><%= preview ? '?preview=1' : '' %>"
+      enctype="multipart/form-data" class="apply-form" novalidate>
+  <table id="apply-form-table" class="form-table">
+    <% let lastSection = null; %>
+    <% fields.forEach(function (f) { %>
+      <% if (f.section && f.section !== lastSection) { %>
+        <tr class="apply-form-section"><td colspan="2"><h2 class="section-title"><%= f.section %></h2></td></tr>
+        <% lastSection = f.section; %>
+      <% } %>
+      <% if (f.kind === 'textarea' || f.kind === 'file' || f.kind === 'checkbox') { %>
+        <tr class="apply-form-<%= f.kind %>">
+          <td colspan="2">
+            <label class="field-label">
+              <% if (f.kind !== 'checkbox') { %><span class="label-text"><%= f.label %><%= f.required ? ' *' : '' %></span><% } %>
+              <% if (f.kind === 'textarea') { %>
+                <textarea name="<%= f.name %>" rows="8" cols="60"><%= f.value || '' %></textarea>
+              <% } else if (f.kind === 'file') { %>
+                <input type="file" name="resume" />
+              <% } else { %>
+                <span class="check-row"><input type="checkbox" name="<%= f.name %>" value="1" <%= f.value ? 'checked' : '' %> />
+                <span class="label-text"><%= f.label %><%= f.required ? ' *' : '' %></span></span>
+              <% } %>
+            </label>
+            <% if (f.error) { %><p class="field-error"><%= f.error %></p><% } %>
+          </td>
+        </tr>
+      <% } else { %>
+        <tr class="apply-form-<%= f.kind %>">
+          <td class="label-cell"><label for="<%= f.name %>" class="nowrap"><%= f.label %><%= f.required ? ' *' : '' %></label></td>
+          <td>
+            <% if (f.kind === 'select') { %>
+              <select name="<%= f.name %>" id="<%= f.name %>">
+                <option value=""></option>
+                <% f.options.forEach(function (opt) { %>
+                  <option value="<%= opt %>" <%= String(f.value) === String(opt) ? 'selected' : '' %>><%= opt %></option>
+                <% }) %>
+              </select>
+            <% } else if (f.kind === 'suggest') { %>
+              <select name="<%= f.name %>" id="<%= f.name %>">
+                <option value=""></option>
+                <% f.options.forEach(function (opt) { %>
+                  <option value="<%= opt %>" <%= String(f.value) === String(opt) ? 'selected' : '' %>><%= opt %></option>
+                <% }) %>
+              </select>
+            <% } else if (f.kind === 'year') { %>
+              <select name="<%= f.name %>" id="<%= f.name %>">
+                <option value=""></option>
+                <% years.forEach(function (y) { %>
+                  <option value="<%= y %>" <%= String(f.value) === String(y) || (f.value && String(f.value).startsWith(String(y))) ? 'selected' : '' %>><%= y %></option>
+                <% }) %>
+              </select>
+            <% } else if (f.kind === 'date') { %>
+              <input type="date" name="<%= f.name %>" id="<%= f.name %>" value="<%= f.value || '' %>" />
+            <% } else { %>
+              <input type="text" name="<%= f.name %>" id="<%= f.name %>" value="<%= f.value ?? '' %>" />
+            <% } %>
+            <% if (f.error) { %><p class="field-error"><%= f.error %></p><% } %>
+          </td>
+        </tr>
+      <% } %>
+    <% }) %>
+    <tr id="apply-form-submit">
+      <td colspan="2">
+        <% if (preview) { %>
+          <button type="submit" class="btn btn-primary">Submit!</button>
+        <% } else { %>
+          <button type="submit" class="btn btn-primary">Submit!</button>
+          <button type="submit" name="preview" value="Preview!" class="btn btn-ghost">Preview</button>
+        <% } %>
+      </td>
+    </tr>
+  </table>
+</form>
+<%- include('../partials/foot') %>

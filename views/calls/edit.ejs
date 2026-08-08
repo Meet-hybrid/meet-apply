@@ -1,0 +1,28 @@
+<%- include('../partials/head') %>
+<% pageTitle = 'Edit ' + call.title; %>
+<h1>Edit call: <code><%= call.id %></code></h1>
+<form method="post" action="/calls/<%= call.id %>" class="form-stack form-stack-wide">
+  <label>Title
+    <input type="text" name="title" value="<%= call.title || '' %>" />
+  </label>
+  <label>Description
+    <textarea name="description" rows="6"><%= call.description || '' %></textarea>
+  </label>
+  <label>Deadline
+    <input type="date" name="deadline" value="<%= call.deadline || '' %>" />
+  </label>
+  <label>Identity columns (space-separated, e.g. "first_name last_name")
+    <input type="text" name="identity_columns" value="<%= call.identity_columns || '' %>" />
+  </label>
+  <div class="check-row">
+    <input type="checkbox" name="open" value="1" <%= call.open ? 'checked' : '' %> />
+    <span>Open</span>
+  </div>
+  <div class="check-row">
+    <input type="checkbox" name="reviewable" value="1" <%= call.reviewable ? 'checked' : '' %> />
+    <span>Reviewable</span>
+  </div>
+  <button type="submit" class="btn btn-primary">Save</button>
+  <a href="/calls" class="btn btn-ghost">Cancel</a>
+</form>
+<%- include('../partials/foot') %>

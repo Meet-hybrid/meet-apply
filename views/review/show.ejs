@@ -1,0 +1,48 @@
+<%- include('../partials/head') %>
+<% pageTitle = 'Application'; %>
+<h1><%= call.title %> — <%= call.identify(app) %></h1>
+
+<table class="data-table">
+  <% appClass.formColumns().forEach(function (c) { %>
+    <tr>
+      <th><%= appClass.labelOf(c) %></th>
+      <td>
+        <% const v = app[c.name]; %>
+        <% if (c.type === 'boolean') { %>
+          <%= v ? 'yes' : 'no' %>
+        <% } else if (c.type === 'paperclip') { %>
+          <% if (v) { %><a href="/review/<%= call.id %>/<%= app.id %>/download/<%= c.name.replace('_file_name','') %>">download</a><% } %>
+        <% } else { %>
+          <%- String(v ?? '') %>
+        <% } %>
+      </td>
+    </tr>
+  <% }) %>
+</table>
+
+<% if (summary) { %>
+  <h2>Review summary (<%= reviewClass.forApp(app.id).length %> reviews)</h2>
+  <table class="data-table">
+    <% reviewClass.numericSummaryColumns().forEach(function (c) { %>
+      <tr>
+        <th><%= reviewClass.labelOf(c) %></th>
+        <td>
+          <% const s = summary[c.name]; %>
+          <% if (c.type === 'integer') { %><%= (Math.round(s * 10) / 10) %><% } %>
+          <% if (c.type === 'boolean') { %><%= Math.round(s * 100) %>%<%%><% } %>
+        </td>
+      </tr>
+    <% }) %>
+    <% reviewClass.formColumns().forEach(function (c) { %>
+      <% if (c.type === 'text' && summary[c.name] && Object.keys(summary[c.name]).length) { %>
+        <tr>
+          <th><%= reviewClass.labelOf(c) %></th>
+          <td><% Object.entries(summary[c.name]).forEach(([who, txt]) => { %><p><b><%= who %></b>: <%= txt %></p><% }) %></td>
+        </tr>
+      <% } %>
+    <% }) %>
+  </table>
+<% } %>
+
+<p><a href="/review/<%= call.id %>" class="btn btn-ghost">Back to list</a></p>
+<%- include('../partials/foot') %>
