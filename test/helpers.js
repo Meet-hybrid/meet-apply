@@ -19,8 +19,14 @@ function setupTestDb() {
   return { dir, dbPath };
 }
 
-/** Remove the temp dir at the end of the test file. */
+/** Remove the temp dir at the end of the test file (closing the DB first). */
 function teardownTestDb(dir) {
+  try {
+    // The DB handle is opened at require time; close it so Windows can delete the file.
+    require('../config/db').db.close();
+  } catch {
+    // already closed or never opened
+  }
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
@@ -59,15 +65,27 @@ function createCookieJar() {
   };
 }
 
-/** Convenience: GET a URL through the cookie jar. */
+// Do NOT follow redirects — tests assert on the 302 itself (and its Location).
+const NO_REDIRECT = { redirect: 'manual' };
+
+/** Convenience: GET a URL through the cookie jar (never follows redirects). */
 function get(base, jar, urlPath, opts) {
-  return fetch(base + urlPath, jar.withCookies(opts)).then((r) => jar.store(r));
+  return fetch(base + urlPath, jar.withCookies({ ...NO_REDIRECT, ...opts })).then((r) => jar.store(r));
 }
 
-/** Convenience: POST a URL-encoded form through the cookie jar. */
+/** Convenience: POST a URL-encoded form through the cookie jar (never follows redirects). */
 function postForm(base, jar, urlPath, fields, opts) {
   const body = new URLSearchParams(fields).toString();
-  return fetch(base + urlPath, jar.withCookies({ method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body, ...opts })).then((r) => jar.store(r));
+  return fetch(
+    base + urlPath,
+    jar.withCookies({
+      ...NO_REDIRECT,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+      ...opts,
+    })
+  ).then((r) => jar.store(r));
 }
 
 /** Extract the CSRF token from a rendered page (hidden input _csrf). */

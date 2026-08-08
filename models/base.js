@@ -76,8 +76,8 @@ class BaseModel {
           out[c.name] = raw === '' || raw == null ? null : Number(raw);
           break;
         case 'boolean':
-          // checkbox: '1'/'on'/true when checked
-          out[c.name] = raw === '1' || raw === 'on' || raw === true ? 1 : 0;
+          // checkbox: '1'/'on'/true/1 when checked
+          out[c.name] = raw === 1 || raw === '1' || raw === 'on' || raw === true ? 1 : 0;
           break;
         case 'date':
           out[c.name] = raw === '' || raw == null ? null : raw;
