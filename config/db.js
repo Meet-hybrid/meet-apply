@@ -56,7 +56,7 @@ db.exec(`
     why_fellow         TEXT,
     challenges         TEXT,
     role               TEXT,
-    foreign            TEXT,
+    "foreign"         TEXT,
     mission            TEXT,
     resume_file_name   TEXT,
     how_hear           TEXT,
