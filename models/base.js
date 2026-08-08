@@ -137,7 +137,10 @@ class BaseModel {
         continue;
       }
       const blank = val === undefined || val === null || val === '';
-      if (c.required && blank) {
+      // required, or required-unless (e.g. graduation_year required unless status is 'Grad student')
+      const required = c.required ||
+        (c.requiredUnless && data[c.requiredUnless.field] !== c.requiredUnless.value);
+      if (required && blank) {
         errors[c.name] = `${label} can't be blank`;
         continue;
       }

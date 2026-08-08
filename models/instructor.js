@@ -11,7 +11,7 @@ class Instructor extends BaseModel {
       { name: 'email', type: 'string', label: 'Email address', required: true, email: true },
       { name: 'major', type: 'string', label: 'Major(s) or research area', required: true },
       { name: 'status', type: 'string', label: 'MIT affiliation', options: ['Undergraduate', 'Grad student', 'Alumnus/a', 'None'] },
-      { name: 'graduation_year', type: 'date', label: 'Undergrad graduation year', yearOnly: true },
+      { name: 'graduation_year', type: 'date', label: 'Undergrad graduation year', yearOnly: true, requiredUnless: { field: 'status', value: 'Grad student' } },
       { name: 'why_meet', type: 'text', label: 'Please describe in 300 words why you want to participate in MEET.', required: true },
       { name: 'programming', type: 'text', label: 'Please describe your programming background. Mention programming languages you know, or professional experience you have.' },
       { name: 'teaching', type: 'text', label: 'Please describe any teaching experience you have. What did you find enjoyable? What did you find challenging?' },
