@@ -97,7 +97,11 @@ class InstructorReview extends BaseModel {
 
   /** Numeric columns that get summarized to a number (for visualizations). */
   numericSummaryColumns() {
-    return this.formColumns().filter((c) => c.type === 'integer' || c.type === 'boolean');
+    return this.formColumns().filter(
+      (c) =>
+        (c.type === 'integer' || c.type === 'boolean') &&
+        !['app_id', 'app_reviewer_id'].includes(c.name)
+    );
   }
 
   /** True when all non-optional scale columns are answered. */

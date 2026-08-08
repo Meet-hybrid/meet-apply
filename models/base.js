@@ -112,15 +112,6 @@ class BaseModel {
     db.prepare(`DELETE FROM ${this.table} WHERE ${this.q('id')} = ?`).run(id);
   }
 
-  /** All rows' values for the given column names (used by export/visualize). */
-  pluck(ids, column) {
-    if (ids.length === 0) return [];
-    const marks = ids.map(() => '?').join(', ');
-    return db
-      .prepare(`SELECT ${this.q('id')}, ${this.q(column)} AS value FROM ${this.table} WHERE ${this.q('id')} IN (${marks})`)
-      .all(...ids);
-  }
-
   // ---- Validation (mirrors the original Rails models) ----------------------
 
   /**

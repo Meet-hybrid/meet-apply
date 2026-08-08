@@ -53,15 +53,12 @@ router.get('/:model', loadCall, (req, res) => {
   const reviewsByApp =
     reviewClass &&
     Object.fromEntries(
-      reviewClass.forAppByReviewer
-        ? []
-        : apps
-            .map((app) => [
-              app.id,
-              reviewClass
-                .forApp(app.id)
-                .filter((r) => r.app_reviewer_id === req.session.username),
-            ])
+      apps.map((app) => [
+        app.id,
+        reviewClass
+          .forApp(app.id)
+          .filter((r) => r.app_reviewer_id === req.session.username),
+      ])
     );
 
   res.render('review/index', {
