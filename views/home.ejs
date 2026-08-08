@@ -18,7 +18,7 @@
       <% if (call.deadline) { %>
         <p class="deadline">Deadline: midnight on <%= call.deadline %></p>
       <% } %>
-      <p class="desc"><%= call.description %></p>
+      <p class="desc"><%- call.description %></p>
     </a>
   <% }) %>
 </div>

@@ -101,6 +101,7 @@ code { background: #f1f2f6; padding: 1px 6px; border-radius: 5px; font-size: 0.9
 .call-card h2 { margin: 0; font-size: 1.05rem; }
 .call-card .deadline { color: var(--warn); font-size: 0.82rem; font-weight: 600; margin: 8px 0 0; }
 .call-card .desc { color: var(--muted); font-size: 0.9rem; margin: 6px 0 0; }
+.call-card .desc p { margin: 0 0 4px; }
 
 /* ---- Badges ---- */
 .badge {
