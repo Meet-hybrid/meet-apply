@@ -5,6 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const { requireLogin } = require('../middleware/auth');
+const { csrfProtect, csrfToken } = require('../middleware/csrf');
 const Call = require('../models/call');
 
 router.use(requireLogin);
@@ -19,10 +20,10 @@ router.get('/', (req, res) => {
 router.get('/:id/edit', (req, res) => {
   const call = Call.find(req.params.id);
   if (!call) return res.status(404).send('Unknown call');
-  res.render('calls/edit', { call, currentUser: req.session.username });
+  res.render('calls/edit', { call, currentUser: req.session.username, csrfToken: csrfToken(req) });
 });
 
-router.post('/:id', (req, res) => {
+router.post('/:id', csrfProtect, (req, res) => {
   const call = Call.find(req.params.id);
   if (!call) return res.status(404).send('Unknown call');
   const data = req.body;

@@ -71,7 +71,6 @@ router.post('/:model', loadCall, upload.single('resume'), (req, res) => {
   if (req.file) raw.resume_file_name = req.file.filename;
 
   const values = appClass.coerce(raw);
-  values.id = raw.id;
   const errors = appClass.validate(values);
 
   const render = (status) =>

@@ -11,6 +11,7 @@ const path = require('node:path');
 const fs = require('node:fs');
 const router = express.Router();
 const { requireLogin } = require('../middleware/auth');
+const { csrfProtect, csrfToken } = require('../middleware/csrf');
 const Call = require('../models/call');
 
 router.use(requireLogin);
@@ -88,6 +89,7 @@ router.get('/:model/:app_id', loadCall, (req, res) => {
       reviewClass,
       errors: {},
       currentUser: req.session.username,
+      csrfToken: csrfToken(req),
     });
   }
 
@@ -115,7 +117,7 @@ router.get('/:model/:app_id', loadCall, (req, res) => {
   });
 });
 
-router.post('/:model/:app_id', loadCall, (req, res) => {
+router.post('/:model/:app_id', loadCall, csrfProtect, (req, res) => {
   const { call, appClass, reviewClass } = req;
   const app = appClass.find(Number(req.params.app_id));
   if (!app) return res.status(404).send('Application not found');

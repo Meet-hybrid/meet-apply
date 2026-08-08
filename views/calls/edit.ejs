@@ -2,6 +2,7 @@
 <% pageTitle = 'Edit ' + call.title; %>
 <h1>Edit call: <code><%= call.id %></code></h1>
 <form method="post" action="/calls/<%= call.id %>" class="form-stack form-stack-wide">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
   <label>Title
     <input type="text" name="title" value="<%= call.title || '' %>" />
   </label>

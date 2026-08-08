@@ -5,6 +5,7 @@
   <p class="lead">Sign in to manage calls, review applications, and export data.</p>
   <% if (error) { %><p class="error-banner"><%= error %></p><% } %>
   <form method="post" action="/login" class="form-stack">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <input type="hidden" name="next" value="<%= next %>" />
     <label>Username
       <input type="text" name="username" autocomplete="username" required autofocus />
