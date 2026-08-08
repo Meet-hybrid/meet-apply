@@ -24,6 +24,7 @@ const student = require('../models/student');
 const fellow = require('../models/fellow');
 const instructor = require('../models/instructor');
 const business = require('../models/business');
+const mentor = require('../models/mentor');
 const review = require('../models/instructor_review');
 
 const DESCRIPTION_STUDENT =
@@ -39,6 +40,9 @@ const DESCRIPTION_INSTRUCTOR =
 const DESCRIPTION_BUSINESS =
   '<p>Summer business instructors teach MEET\'s entrepreneurship and business ' +
   'curriculum during the summer program.</p>';
+const DESCRIPTION_MENTOR =
+  '<p>MEET mentors support students on their capstone projects, offering ' +
+  'industry guidance, feedback, and encouragement.</p>';
 
 function seedCalls() {
   const calls = [
@@ -46,6 +50,7 @@ function seedCalls() {
     ['fellow', 1, 0, 'MEET Fellowship Application', DESCRIPTION_FELLOW, '2026-12-31', 'first_name last_name'],
     ['instructor', 1, 1, 'Summer Technical Instructor Application', DESCRIPTION_INSTRUCTOR, '2026-12-31', 'first_name last_name'],
     ['business', 1, 1, 'Summer Business Instructor Application', DESCRIPTION_BUSINESS, '2026-12-31', 'first_name last_name'],
+    ['mentor', 1, 0, 'MEET Mentor Application', DESCRIPTION_MENTOR, '2026-12-31', 'first_name last_name'],
   ];
   for (const [id, open, reviewable, title, description, deadline, identity] of calls) {
     if (!Call.find(id)) {
@@ -147,6 +152,26 @@ function seedBusinesses() {
   console.log('Businesses:', business.count());
 }
 
+function seedMentors() {
+  if (mentor.count() > 0) return;
+  const now = new Date().toISOString();
+  mentor.create({
+    first_name: 'Rania', last_name: 'Khoury', email: 'rania.khoury@example.com',
+    current_role: 'Senior Software Engineer', organization: 'TechForGood',
+    years_experience: 8, expertise_areas: 'Web development, mentoring junior engineers',
+    why_mentor: 'I want to help students turn ideas into real products.',
+    availability: '3-5 hours/week', linkedin: 'linkedin.com/in/raniakhoury', created_at: now,
+  });
+  mentor.create({
+    first_name: 'Eli', last_name: 'Rosenthal', email: 'eli.rosenthal@example.com',
+    current_role: 'Data Scientist', organization: 'DataBridge',
+    years_experience: 5, expertise_areas: 'Data science, Python, machine learning',
+    why_mentor: 'MEET shaped my path; I want to give that back.',
+    availability: '1-2 hours/week', linkedin: 'linkedin.com/in/elirosenthal', created_at: now,
+  });
+  console.log('Mentors:', mentor.count());
+}
+
 function seedReviews() {
   if (review.count() > 0) return;
   const now = new Date().toISOString();
@@ -176,6 +201,7 @@ function seedAll() {
   seedFellows();
   seedInstructors();
   seedBusinesses();
+  seedMentors();
   seedReviews();
   return {
     calls: Call.all().map((c) => c.id),
@@ -183,12 +209,13 @@ function seedAll() {
     fellows: fellow.count(),
     instructors: instructor.count(),
     businesses: business.count(),
+    mentors: mentor.count(),
     reviews: review.count(),
   };
 }
 
 // Export for tests; only run the full seed when executed directly.
-module.exports = { seedAll, seedCalls, seedStudents, seedFellows, seedInstructors, seedBusinesses, seedReviews };
+module.exports = { seedAll, seedCalls, seedStudents, seedFellows, seedInstructors, seedBusinesses, seedMentors, seedReviews };
 
 if (require.main === module) {
   seedAll();
