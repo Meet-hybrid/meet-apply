@@ -7,7 +7,8 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "seed": "node db/seed.js",
-    "reset": "node db/seed.js --force"
+    "reset": "node db/seed.js --force",
+    "test": "node --test test/"
   },
   "engines": {
     "node": ">=23.4.0"
