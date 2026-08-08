@@ -1,0 +1,22 @@
+{
+  "name": "meet-apply-node",
+  "version": "1.0.0",
+  "description": "Modern Node.js rebuild of MEET's online application system (original: github.com/meet/apply, Rails 3.0.20)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node db/seed.js",
+    "reset": "node db/seed.js --force"
+  },
+  "engines": {
+    "node": ">=23.4.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "multer": "^2.0.1"
+  }
+}
