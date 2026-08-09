@@ -40,7 +40,7 @@ class Student extends BaseModel {
       { name: '_student_first_name', type: 'string', label: 'First name', section: 'Student Information', required: true },
       { name: '_student_last_name', type: 'string', label: 'Last name', section: 'Student Information', required: true },
       { name: '_student_id_number', type: 'integer', label: 'ID number', section: 'Student Information', required: true, length: 9, unique: true },
-      { name: '_student_gender', type: 'string', label: 'Gender', section: 'Student Information', options: ['Male', 'Female'] },
+      { name: '_student_gender', type: 'string', label: 'Gender', section: 'Student Information', options: ['Male', 'Female'], required: true },
       { name: '_student_birthday', type: 'date', label: 'Birthday', section: 'Student Information' },
       { name: '_student_city', type: 'string', label: 'City', section: 'Student Information', suggest: CITIES },
       { name: '_student_school', type: 'string', label: 'School', section: 'Student Information', suggest: SCHOOLS },
