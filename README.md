@@ -57,6 +57,14 @@ npm start                   # → http://localhost:3000
   - `/export/:model` — CSV export of applications
   - `/visualize/:model/table` — summary table of reviews
 
+### 🐳 Run with Docker
+
+```bash
+docker-compose up --build   # → http://localhost:3000
+# data/ (SQLite DB) and uploads/ (resumes) persist in named volumes
+# Admin login comes from ADMIN_USERNAME / ADMIN_PASSWORD (see the compose file)
+```
+
 ---
 
 ## 🗺️ How this maps to the original Rails app
@@ -197,7 +205,8 @@ Each model is *metadata*, not boilerplate. `models/base.js` provides:
    submit a test application, review it, export CSV, check visualizations.
 7. **Commit & push** — every step above gets committed to GitHub so nothing is ever lost.
 
-Nice-to-haves later: automated tests (`node:test`), Dockerfile, deploy to Render/Railway/Fly.
+Nice-to-haves later: ~~automated tests (`node:test`, 37 passing)~~ (done), ~~Dockerfile~~
+(done — see "🐳 Run with Docker" above), deploy to Render/Railway/Fly.
 
 ---
 

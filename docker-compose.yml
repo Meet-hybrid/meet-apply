@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  meet-apply:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      SESSION_SECRET: change-me-in-prod
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: change-me-in-prod
+    volumes:
+      - apply-data:/app/data
+      - apply-uploads:/app/uploads
+
+volumes:
+  apply-data:
+  apply-uploads:
